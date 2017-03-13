@@ -49,6 +49,11 @@ except:
 ## INPUT: any string
 ## RETURN VALUE: a list of strings that represents all of the URLs in the input string
 
+def find_urls(a_string):
+	regex = "(https?:\/\/\S+[.]\S+\S+)"
+	all_urls = re.findall(regex, a_string, re.MULTILINE)
+	return all_urls
+
 
 ## For example: 
 ## find_urls("http://www.google.com is a great site") should return ["http://www.google.com"]
