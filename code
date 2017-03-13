@@ -76,8 +76,28 @@ def find_urls(a_string):
 ## Start with this page: https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All  
 ## End with this page: https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All&page=11 
 
-
-
+def get_umsi_data():
+	unique_identifier = "umsi_directory_data"
+	if unique_identifier in CACHE_DICTION:
+		return CACHE_DICTION[unique_identifier]
+	else:
+		html_strings = []
+		base_url = "https://www.si.umich.edu/directory?field_person_firstname_value=&field_person_lastname_value=&rid=All"
+		r = requests.get(base_url, headers={'User-Agent': 'SI_CLASS'})
+		info = r.text
+		html_strings.append(info)
+		for i in range(1,12):
+			new_url = base_url + "&page=" + str(i)
+			r = requests.get(new_url, headers={'User-Agent': 'SI_CLASS'})
+			info = r.text
+			html_strings.append(info)
+		
+		CACHE_DICTION[unique_identifier] = html_strings
+		f = open(CACHE_FNAME,'w')
+		f.write(json.dumps(CACHE_DICTION))
+		f.close()
+		return html_strings
+		
 
 
 ## PART 2 (b) - Create a dictionary saved in a variable umsi_titles 
